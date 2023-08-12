@@ -1,0 +1,4 @@
+fastapi~=0.101
+uvicorn~=0.23.2
+openai-whisper==v20230314
+librosa~=0.10
