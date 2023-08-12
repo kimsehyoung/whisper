@@ -3,13 +3,11 @@ from fastapi import APIRouter, Request
 from .config import WHISPER_MODEL
 import logging
 from pydantic import BaseModel, Field
-from pydantic.dataclasses import dataclass
 import base64
 import librosa
 import io
 import threading
 
-@dataclass
 class SpeechRequest(BaseModel):
     audio: str = Field(..., description="A base64-encoded string. Value: wav, mp3, m4a, webm, mp4, mpga, mpeg")
     language: str = Field(..., description="Translation supports only English. Value: en, ko, ja, zh")
