@@ -1,4 +1,4 @@
-fastapi~=0.101
-uvicorn~=0.23.2
-openai-whisper==v20230314
-librosa~=0.10
+fastapi~=0.104.1
+uvicorn~=0.24.0
+openai-whisper==v20231117
+librosa~=0.10.1

@@ -2,6 +2,7 @@ from fastapi import FastAPI
 import uvicorn
 import logging
 from config import ( LOGGING_LEVEL, UVICORN_HOST, UVICORN_PORT )
+from health.router import router as health_router
 from speech.router import router as speech_router
 
 
@@ -11,6 +12,7 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url=None
 )
+app.include_router(health_router, prefix="/health")
 app.include_router(speech_router, prefix="/speech")
 
 
