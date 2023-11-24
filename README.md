@@ -1,5 +1,12 @@
 # Speech API Server using whisper
 
+## Environment Variables
+- UVICORN_HOST (default: 0.0.0.0)
+- UVICORN_PORT (default: 8000)
+- LOGGING_LEVEL (default: INFO)
+- WHISPER_MODEL (default: base)
+
+
 ## API Document
 http://{HOST}:{PORT}/docs
 
