@@ -1,0 +1,83 @@
+# common
+nameOverride: ""
+fullnameOverride: "whisper"
+
+
+# configmap
+env:
+  whisperModel: ""
+  uvicornHost: ""
+  uvicornPort: ""
+  loggingLevel: ""
+
+
+# service
+service:
+  type: NodePort
+  port: 80
+
+
+# deployment
+replicaCount: 2
+
+strategy:
+  rollingUpdate:
+    maxSurge: 25%
+    maxUnavailable: 25%
+
+podAnnotations:
+  linkerd.io/inject: enabled
+podLabels: {}
+
+image:
+  repository: ghcr.io/kimsehyoung/whisper
+  pullPolicy: IfNotPresent
+  tag: "v1.0.0"
+
+resources: 
+  requests:
+    cpu: "1"
+    memory: "1Gi"
+  limits:
+    cpu: "1.5"
+    memory: "1.5Gi"
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+          - key: type
+            operator: In
+            values:
+            - multi-arch-general
+          - key: kubernetes.io/arch
+            operator: In
+            values:
+            - arm64
+
+tolerations: []
+
+
+# hpa
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 60
+  targetMemoryUtilizationPercentage: 60
+
+
+# ingress
+ingress:
+  enabled: true
+  className: "alb"
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+  hosts:
+    - paths:
+        - path: /
+          pathType: Prefix
+
+

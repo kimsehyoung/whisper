@@ -1,0 +1,8 @@
+apiVersion: v2
+name: whisper
+description: A Helm chart for Whisper API server based on OpenAI's Whisper
+type: application
+version: 1.0.0
+appVersion: 1.0.0
+sources:
+  - https://github.com/kimsehyoung/whisper

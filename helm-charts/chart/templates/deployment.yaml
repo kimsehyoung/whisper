@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "whisper.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "whisper.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    {{- toYaml .Values.strategy | nindent 4 }}
+  selector:
+    matchLabels:
+      {{- include "whisper.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "whisper.labels" . | nindent 8 }}
+	    {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.env.uvicornPort | default "8000" }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: WHISPER_MODEL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "whisper.fullname" . }}-config
+                  key: whisper_model
+            - name: UVICORN_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "whisper.fullname" . }}-config
+                  key: uvicorn_host
+            - name: UVICORN_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "whisper.fullname" . }}-config
+                  key: uvicorn_port
+            - name: LOGGING_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "whisper.fullname" . }}-config
+                  key: logging_level
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              {{- include "whisper.selectorLabels" . | nindent 14 }}
+      {{- with .Values.topologySpreadConstraints }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
