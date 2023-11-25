@@ -32,14 +32,18 @@ spec:
             - name: http
               containerPort: {{ .Values.env.uvicornPort | default "8000" }}
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: http
           readinessProbe:
             httpGet:
               path: /health
               port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 15
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
