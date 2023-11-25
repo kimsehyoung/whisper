@@ -3,9 +3,9 @@ entries:
   whisper:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2023-11-26T00:57:34.027159+09:00"
+    created: "2023-11-26T01:31:26.320603+09:00"
     description: A Helm chart for Whisper API server based on OpenAI's Whisper
-    digest: 6031f65170850552874c47ceef795fc652580ff76cb97e6edcf77bdba344389a
+    digest: 4684b0fb143d345c1da81ac67edbc57e652e1cc9c397225951acc29394885382
     name: whisper
     sources:
     - https://github.com/kimsehyoung/whisper
@@ -13,4 +13,4 @@ entries:
     urls:
     - whisper-1.0.0.tgz
     version: 1.0.0
-generated: "2023-11-26T00:57:34.025421+09:00"
+generated: "2023-11-26T01:31:26.319228+09:00"
